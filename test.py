@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
+# feature: 30天内加速度;创业板，中小板，白马
 import re
 import json
 import requests
@@ -47,8 +48,7 @@ def mainland_hk_pipe_last():
 
     temp = html_splited[0][html_splited[0].find('["')+2:-1].split(',')
 
-    print("hk-hu pipe  | hk in: " +
-          colours(temp[0])+", shanghai in: "+colours(temp[6]))
+    print("hk-hu pipe  | hk in: " + colours(temp[0]) + ", shanghai in: " + colours(temp[6]))
 
     # print(html_splited[1])
     temp = html_splited[1].split(',')
@@ -126,8 +126,7 @@ def hk_to_mainland_1d():
     # ax.legend(loc='best')
     # plt.show()
 
-
-def hk_to_mainland_10d():
+def hk_to_mainland_several_d():
     hk_to_shenzhen_10d('shanghai')
     hk_to_shenzhen_10d('shenzhen')
     hk_to_shenzhen_10d('shanghai', 30)
@@ -162,8 +161,9 @@ def hk_to_shenzhen_10d(stock_exchange, days=10):
 
     # print(hk_mainland_7d)
     # print(list_drzjlr)
+    # print(list_drzjlr[::-1])
     foo_x = np.arange(0, len(list_drzjlr))
-    foo_y = np.asarray(list_drzjlr, dtype="float64")
+    foo_y = np.asarray(list_drzjlr[::-1], dtype="float64")
 
     d10_X = sm.add_constant(foo_x)
     foo_model = sm.OLS(foo_y, d10_X)
@@ -178,10 +178,10 @@ def hk_to_shenzhen_10d(stock_exchange, days=10):
     ax.plot(x, foo_y, 'o', label='data')
     ax.plot(x, d10_y_fitted, 'r--.', label='OLS')
     ax.legend(loc='best')
-    # plt.show()
+    plt.show()
 
 
 if __name__ == '__main__':
     mainland_hk_pipe_last()
     hk_to_mainland_1d()
-    hk_to_mainland_10d()
+    hk_to_mainland_several_d()
